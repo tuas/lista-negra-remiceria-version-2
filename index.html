@@ -1,24 +1,147 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Gestión de Deudores - Remisería</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Deudores - Remisería Tandil</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        form { max-width: 400px; }
-        input { width: 100%; margin-bottom: 10px; padding: 5px; }
-        button { padding: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background: #45a049; }
-        .edit-btn, .delete-btn { padding: 5px; margin-right: 5px; }
-        .edit-btn { background: #FFC107; color: black; }
-        .delete-btn { background: #f44336; color: white; }
+        body {
+            font-family: -apple-system, BlinkMacOSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a3c34;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #1a3c34;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .actions {
+            white-space: nowrap;
+        }
+        button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .edit-btn {
+            background: #ffc107;
+            color: #212529;
+            margin-right: 6px;
+        }
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            background: #1a3c34;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        button[type="submit"]:hover {
+            background: #0f2a24;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                margin-bottom: 1rem;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                position: absolute;
+                top: 12px;
+                left: 15px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            td:nth-of-type(1):before { content: "ID"; }
+            td:nth-of-type(2):before { content: "Dirección"; }
+            td:nth-of-type(3):before { content: "Monto"; }
+            td:nth-of-type(4):before { content: "Notas"; }
+            td:nth-of-type(5):before { content: "Acciones"; }
+        }
     </style>
 </head>
 <body>
+
+<div class="container">
     <h1>Deudores de Viajes - Remisería</h1>
+
     <table id="tablaDeudores">
         <thead>
             <tr>
@@ -32,78 +155,141 @@
         <tbody></tbody>
     </table>
 
-    <h2>Agregar/Actualizar Deudor</h2>
     <form id="formDeudor">
         <input type="hidden" id="id" value="">
-        <label>Dirección:</label><input type="text" id="direccion" required>
-        <label>Monto Adeudado:</label><input type="number" id="monto" required>
-        <label>Notas:</label><input type="text" id="notas">
-        <button type="submit">Guardar</button>
+        
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" required placeholder="Ej: Av. Colón 456">
+
+        <label for="monto">Monto Adeudado ($):</label>
+        <input type="number" id="monto" step="0.01" required placeholder="Ej: 12500.50">
+
+        <label for="notas">Notas / Detalle:</label>
+        <input type="text" id="notas" placeholder="Ej: 3 viajes - cliente habitual">
+
+        <button type="submit">Guardar Registro</button>
     </form>
+</div>
 
-    <script>
-        const URL_SCRIPT = 'URL_DEL_SCRIPT'; // Reemplaza con tu URL de Apps Script, ej: 'https://script.google.com/macros/s/AKfycbw.../exec'
+<script>
+    // ¡¡¡ CAMBIAR ESTA LÍNEA CON TU URL REAL DE GOOGLE APPS SCRIPT !!!
+    const URL_SCRIPT = 'https://docs.google.com/spreadsheets/d/1MzKwuW7jTcd3GvXK-hA5t0qYUSh9E__PWUhfDn8vB3c/edit?usp=sharingI';  
+    // Ejemplo: 'https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxx/exec'
 
-        async function cargarDatos() {
+    async function cargarDatos() {
+        try {
             const response = await fetch(URL_SCRIPT);
+            if (!response.ok) throw new Error('Error al cargar datos');
             const data = await response.json();
+            
             const tbody = document.querySelector('#tablaDeudores tbody');
             tbody.innerHTML = '';
-            for (let i = 1; i < data.length; i++) { // Saltar encabezados
+
+            // Saltamos la fila 0 (encabezados)
+            for (let i = 1; i < data.length; i++) {
                 const row = data[i];
+                if (!row || row.length < 4) continue;
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${row[0]}</td>
-                    <td>${row[1]}</td>
-                    <td>${row[2]}</td>
-                    <td>${row[3]}</td>
-                    <td>
-                        <button class="edit-btn" onclick="editar(${row[0]}, '${row[1]}', ${row[2]}, '${row[3]}')">Editar</button>
-                        <button class="delete-btn" onclick="borrar(${row[0]})">Borrar</button>
+                    <td>${row[0] || ''}</td>
+                    <td>${row[1] || ''}</td>
+                    <td>$${Number(row[2] || 0).toLocaleString('es-AR')}</td>
+                    <td>${row[3] || ''}</td>
+                    <td class="actions">
+                        <button class="edit-btn" onclick="editar(${row[0]}, '${escapeHtml(row[1])}', ${row[2]}, '${escapeHtml(row[3])}')">
+                            Editar
+                        </button>
+                        <button class="delete-btn" onclick="borrar(${row[0]})">
+                            Borrar
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             }
+        } catch (err) {
+            console.error(err);
+            alert('Error al cargar los datos. Verifica la URL del script.');
         }
+    }
 
-        document.getElementById('formDeudor').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('id').value;
-            const direccion = document.getElementById('direccion').value;
-            const monto = document.getElementById('monto').value;
-            const notas = document.getElementById('notas').value;
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 
-            const action = id ? 'update' : 'add';
-            const body = JSON.stringify({ action, id, direccion, monto, notas });
+    document.getElementById('formDeudor').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const id = document.getElementById('id').value.trim();
+        const direccion = document.getElementById('direccion').value.trim();
+        const monto = document.getElementById('monto').value.trim();
+        const notas = document.getElementById('notas').value.trim();
 
-            await fetch(URL_SCRIPT, { method: 'POST', body });
-            limpiarForm();
-            cargarDatos();
-        });
+        const action = id ? 'update' : 'add';
 
-        function editar(id, direccion, monto, notas) {
-            document.getElementById('id').value = id;
-            document.getElementById('direccion').value = direccion;
-            document.getElementById('monto').value = monto;
-            document.getElementById('notas').value = notas;
+        const payload = {
+            action,
+            id: id || undefined,
+            direccion,
+            monto,
+            notas
+        };
+
+        try {
+            const response = await fetch(URL_SCRIPT, {
+                method: 'POST',
+                mode: 'no-cors',           // importante para Google Apps Script
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            limpiarFormulario();
+            await cargarDatos();
+        } catch (err) {
+            console.error(err);
+            alert('Error al guardar. Revisa la consola del navegador.');
         }
+    });
 
-        async function borrar(id) {
-            if (confirm('¿Seguro que querés borrar?')) {
-                const body = JSON.stringify({ action: 'delete', id });
-                await fetch(URL_SCRIPT, { method: 'POST', body });
-                cargarDatos();
-            }
+    function editar(id, direccion, monto, notas) {
+        document.getElementById('id').value = id;
+        document.getElementById('direccion').value = direccion;
+        document.getElementById('monto').value = monto;
+        document.getElementById('notas').value = notas;
+        window.scrollTo({ top: document.querySelector('form').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    async function borrar(id) {
+        if (!confirm('¿Realmente querés eliminar este registro?')) return;
+
+        try {
+            await fetch(URL_SCRIPT, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', id })
+            });
+            await cargarDatos();
+        } catch (err) {
+            console.error(err);
+            alert('Error al intentar borrar el registro');
         }
+    }
 
-        function limpiarForm() {
-            document.getElementById('id').value = '';
-            document.getElementById('direccion').value = '';
-            document.getElementById('monto').value = '';
-            document.getElementById('notas').value = '';
-        }
+    function limpiarFormulario() {
+        document.getElementById('id').value = '';
+        document.getElementById('direccion').value = '';
+        document.getElementById('monto').value = '';
+        document.getElementById('notas').value = '';
+    }
 
-        window.onload = cargarDatos;
-    </script>
+    // Carga inicial
+    window.addEventListener('load', cargarDatos);
+</script>
 </body>
 </html>
