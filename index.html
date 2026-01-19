@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Deudores - Remisería</title>
+   
+</head>
+<body>
+    <h1>Deudores de Viajes - Remisería</h1>
+    <table id="tablaDeudores">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Dirección</th>
+                <th>Monto Adeudado</th>
+                <th>Notas</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Agregar/Actualizar Deudor</h2>
+    <form id="formDeudor">
+        <input type="hidden" id="id" value="">
+        <label>Dirección:</label><input type="text" id="direccion" required>
+        <label>Monto Adeudado:</label><input type="number" id="monto" required>
+        <label>Notas:</label><input type="text" id="notas">
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        const URL_SCRIPT = 'URL_DEL_SCRIPT'; // Reemplaza con tu URL de Apps Script, ej: 'https://script.google.com/macros/s/AKfycbw.../exec'
+
+        async function cargarDatos() {
+            const response = await fetch(URL_SCRIPT);
+            const data = await response.json();
+            const tbody = document.querySelector('#tablaDeudores tbody');
+            tbody.innerHTML = '';
+            for (let i = 1; i < data.length; i++) { // Saltar encabezados
+                const row = data[i];
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editar(${row[0]}, '${row[1]}', ${row[2]}, '${row[3]}')">Editar</button>
+                        <button class="delete-btn" onclick="borrar(${row[0]})">Borrar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        document.getElementById('formDeudor').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('id').value;
+            const direccion = document.getElementById('direccion').value;
+            const monto = document.getElementById('monto').value;
+            const notas = document.getElementById('notas').value;
+
+            const action = id ? 'update' : 'add';
+            const body = JSON.stringify({ action, id, direccion, monto, notas });
+
+            await fetch(URL_SCRIPT, { method: 'POST', body });
+            limpiarForm();
+            cargarDatos();
+        });
+
+        function editar(id, direccion, monto, notas) {
+            document.getElementById('id').value = id;
+            document.getElementById('direccion').value = direccion;
+            document.getElementById('monto').value = monto;
+            document.getElementById('notas').value = notas;
+        }
+
+        async function borrar(id) {
+            if (confirm('¿Seguro que querés borrar?')) {
+                const body = JSON.stringify({ action: 'delete', id });
+                await fetch(URL_SCRIPT, { method: 'POST', body });
+                cargarDatos();
+            }
+        }
+
+        function limpiarForm() {
+            document.getElementById('id').value = '';
+            document.getElementById('direccion').value = '';
+            document.getElementById('monto').value = '';
+            document.getElementById('notas').value = '';
+        }
+
+        window.onload = cargarDatos;
+    </script>
+</body>
+</html>
